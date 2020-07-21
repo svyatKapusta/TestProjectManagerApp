@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Web;
+﻿using System.Data.Entity;
 using TestProjectManagerApp.Models;
 
 namespace TestProjectManagerApp.Data
@@ -23,10 +19,10 @@ namespace TestProjectManagerApp.Data
 
 
 
-        public System.Data.Entity.DbSet<TestProjectManagerApp.Models.User> Users { get; set; }
-        public System.Data.Entity.DbSet<TestProjectManagerApp.Models.Project> Projects { get; set; }
-        public System.Data.Entity.DbSet<TestProjectManagerApp.Models.Role> Roles { get; set; }
-        public System.Data.Entity.DbSet<TestProjectManagerApp.Models.File> Files { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<File> Files { get; set; }
 
 
     }

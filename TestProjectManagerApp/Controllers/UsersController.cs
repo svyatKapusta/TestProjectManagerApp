@@ -67,7 +67,7 @@ namespace TestProjectManagerApp.Controllers
             {
                 db.Users.Add(user);
                 await db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Login");
             }
             return View(user);
         }

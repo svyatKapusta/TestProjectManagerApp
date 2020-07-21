@@ -10,9 +10,7 @@ using System.Web.Mvc;
 using TestProjectManagerApp.Data;
 using TestProjectManagerApp.Models;
 using TestProjectManagerApp.Infrastructure;
-using System.Security.AccessControl;
 using PagedList;
-using System.Web.UI.WebControls;
 
 namespace TestProjectManagerApp.Controllers
 {
@@ -44,7 +42,6 @@ namespace TestProjectManagerApp.Controllers
             int pageSize = 3;
             int pageNumber = (page ?? 1);
             return View(projects.ToPagedList(pageNumber, pageSize));
-            //return View(await projects.ToListAsync());
         }
 
         // GET: Projects/Details/5
@@ -91,10 +88,11 @@ namespace TestProjectManagerApp.Controllers
 
         //Download file from Db
         [CustomAuthorize("Admin", "User")]
-        public FileResult Download(string FileId)
+        public async Task<FileResult> Download(string FileId)
         {
             var id = Int32.Parse(FileId);
-            var fileToRetrieve = db.Files.Find(id);
+            var fileToRetrieve = await db.Files.FindAsync(id);
+            if (fileToRetrieve == null) return null;
             return File(fileToRetrieve.Content, fileToRetrieve.ContentType);
         }
         // GET: Projects/Edit/5
@@ -127,6 +125,7 @@ namespace TestProjectManagerApp.Controllers
                     project.Attachments = files;
                 }
                 var proj = db.Projects.Find(project.Id);
+                if (proj == null) return View(project);
                 proj.Created = project.Created;
                 proj.Description = project.Description;
                 proj.End = project.End;
@@ -139,11 +138,9 @@ namespace TestProjectManagerApp.Controllers
                 proj.Type = project.Type;
                 proj.Updated = project.Updated;
                 proj.Attachments = project.Attachments;
-                //db.Entry(project).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            var errors = ModelState.Values.SelectMany(v => v.Errors);
             return View(project);
         }
 
