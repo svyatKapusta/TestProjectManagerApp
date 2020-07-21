@@ -1,0 +1,110 @@
+﻿@model PagedList.IPagedList<TestProjectManagerApp.Models.Project>
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+
+
+
+@{
+    ViewBag.Title = "Index";
+    var userRole = ((Role)Session["Role"]).Name;
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+@if (userRole.Equals("Admin"))
+{
+    using (Html.BeginForm("Index", "Projects", FormMethod.Get))
+    {
+        <p>
+            Find by title: @Html.TextBox("searchStringTitle")
+            Find by Organization: @Html.TextBox("searchStringOrganization")
+            Find by Type: @Html.TextBox("searchStringType")
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </p>
+    }
+}
+<table class="table">
+    <tr>
+        <th>
+            Title
+        </th>
+        <th>
+            Description
+        </th>
+        <th>
+            Organization
+        </th>
+        <th>
+            Start
+        </th>
+        <th>
+            End
+        </th>
+        <th>
+            Role
+        </th>
+        <th>
+            Link
+        </th>
+        <th>
+            Skills
+        </th>
+        <th>
+            Type
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Organization)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Start)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.End)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Link)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Skills)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                <div class="btn-group" role="group">
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-primary" })
+                    @if (@userRole.Equals("Admin"))
+                    {
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" });
+                    }
+                </div>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
