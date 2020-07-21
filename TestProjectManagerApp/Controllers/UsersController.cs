@@ -34,15 +34,13 @@ namespace TestProjectManagerApp.Controllers
             {
                 using (var context = new TestProjectManagerAppContext())
                 {
-                    User user = context.Users
-                                       .Where(u => u.UserId == model.UserId && u.Password == model.Password)
-                                       .FirstOrDefault();
+                    User user = context.Users.FirstOrDefault(u => u.UserId == model.UserId && u.Password == model.Password);
 
                     if (user != null)
                     {
                         Session["UserName"] = user.UserName;
                         Session["UserId"] = user.UserId;
-                        Session["Role"] = db.Roles.Where(r => r.Id == user.RoleId).FirstOrDefault();
+                        Session["Role"] = db.Roles.FirstOrDefault(r => r.Id == user.RoleId);
                         return RedirectToAction("Index", "Home");
                     }
                     else
@@ -73,13 +71,13 @@ namespace TestProjectManagerApp.Controllers
             }
             return View(user);
         }
-        public  ActionResult Edit(string UserId)
+        public ActionResult Edit(string UserId)
         {
             if (UserId == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            User user = db.Users.Where(u => u.UserId == UserId).FirstOrDefault();
+            User user = db.Users.FirstOrDefault(u => u.UserId == UserId);
             if (user == null)
             {
                 return HttpNotFound();
